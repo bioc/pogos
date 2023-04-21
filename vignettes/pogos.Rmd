@@ -139,7 +139,7 @@ the following snapshot of a slice of ChEBI.
 
 ```{r doch,fig=TRUE}
 library(ontoProc)
-cc = getChebiOnto()
+cc = getOnto("chebi_full")
 library(ontologyPlot)
 onto_plot(cc, 
   c("CHEBI:134109", "CHEBI:61115", "CHEBI:75603", "CHEBI:37699", 
@@ -170,7 +170,7 @@ used in pharmacogenomics.  Nevertheless there is
 some apparent lack of consistency.
 
 ```{r ana,fig=TRUE}
-clo = getCellLineOnto()
+clo = getOnto("cellLineOnto", year_added="2022")
 smoc = c("CLO:0000517", "CLO:0000560", "CLO:0000563", "CLO:0001072", 
 "CLO:0001088", "CLO:0001138", "CLO:0007606")
 onto_plot(clo, smoc)
@@ -197,7 +197,7 @@ What are they?  What organs do they represent?  One way
 to proceed is through parent terms in Cell Line Ontology.
 ```{r lkoo}
 library(ontoProc)
-clo = getCellLineOnto()
+clo = getOnto("cellLineOnto", year_added="2022")
 minds = which(clo$name %in% c("143B cell", "1321N1 cell", "184B5 cell"))
 tags = clo$id[minds]
 clo$name[ unlist(clo$parent[tags]) ]
@@ -214,7 +214,7 @@ infrastructure available in `r CRANpkg("ontologyIndex")` and
 add meaningful connections.
 
 ```{r lkefo, fig=TRUE}
-ee = getEFOOnto()
+ee = getOnto("efoOnto")
 onto_plot(ee, c("UBERON:0000474", "UBERON:0000079", 
   "UBERON:0000990", "UBERON:0000995", "UBERON:0003982", 
   "UBERON:0000310", "UBERON:0002107", "UBERON:0001264", 
@@ -234,7 +234,7 @@ concept "instances".
 This will involve more work.  We have the compounds in PharmacoDB.
 How many match the compound names in Chebi? 
 ```{r lkcom}
-chl = getChebiOnto()
+chl = getOnto("chebi_full")
 allch = chl$name
 mm = allch[match(tolower(compounds_v1[,2]), tolower(allch), nomatch=0)]
 round(length(mm)/nrow(compounds_v1),2) # not high
