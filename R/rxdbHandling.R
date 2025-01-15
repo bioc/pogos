@@ -14,8 +14,8 @@ topEndpoints_v1 = function() {
 #' @param x string suitable for input to GET as GET(x)
 #' @return output of fromJSON, typically a list
 #' @examples
-#' cl = basicDecoder('https://pharmacodb.pmgenomics.ca/api/v1/cell_lines')
-#' unlist(cl)
+#' cl = try(basicDecoder('https://pharmacodb.pmgenomics.ca/api/v1/cell_lines'))
+#' if (!inherits(cl, "try-error")) unlist(cl) # or pmgenomics is down
 #' @export
 basicDecoder = function(x) fromJSON(readBin(GET(x)$content, what = "character"))
 
@@ -26,8 +26,9 @@ basicDecoder = function(x) fromJSON(readBin(GET(x)$content, what = "character"))
 #' @param decoder a function of one argument that will be applied to API response (typically JSON)
 #' @return typically a list, dependent on decoder parameter
 #' @examples
-#' qout = rxdbQuery_v1('cell_lines') # yields 30; append '?all=true' to retrieve all
-#' unlist(lapply(qout, function(x) x[[2]]))
+#' qout = try(rxdbQuery_v1('cell_lines')) # yields 30; append '?all=true' to retrieve all
+#' if (!inherits(qout, "try-error")) unlist(lapply(qout, function(x) x[[2]]))
+#' # or pmgenomics.ca is down
 #' @export
 rxdbQuery_v1 = function(..., url = "https://pharmacodb.pmgenomics.ca/api/v1/", decoder = basicDecoder) {
     parms = list(...)

@@ -16,6 +16,6 @@ output of fromJSON, typically a list
 convert binary output of GET()$content to list
 }
 \examples{
-cl = basicDecoder('https://pharmacodb.pmgenomics.ca/api/v1/cell_lines')
-unlist(cl)
+cl = try(basicDecoder('https://pharmacodb.pmgenomics.ca/api/v1/cell_lines'))
+if (!inherits(cl, "try-error")) unlist(cl) # or pmgenomics is down
 }

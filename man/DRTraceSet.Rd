@@ -41,5 +41,7 @@ DRTraceSet constructor for multiple cell lines, single drug, single dataset
 Will query pharmacodb for relevant dose-response information
 }
 \examples{
-DRTraceSet()
+val = try(DRTraceSet())
+if (!inherits(val, "try-error")) val
+# otherwise pharmacodb.pmgenomics.ca is down
 }

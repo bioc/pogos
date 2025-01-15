@@ -150,7 +150,9 @@ setMethod("plot", c("DRTraceSet", "missing"), function(x, y, ...) {
 #' @note Will query pharmacodb for relevant dose-response information
 #' @return instance of DRTraceSet
 #' @examples
-#' DRTraceSet()
+#' val = try(DRTraceSet())
+#' if (!inherits(val, "try-error")) val
+#' # otherwise pharmacodb.pmgenomics.ca is down
 #' @export
 DRTraceSet = function(cell_lines = c("SK-ES-1", "TC-71", "MHH-ES-1", "HCC-56", "SK-HEP-1"), 
     drug = "Irinotecan", dataset = "CCLE") {

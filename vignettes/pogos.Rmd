@@ -66,9 +66,11 @@ iric
 - `DRProfSet`: for a given cell line, provide the dose-response profiles for
 a number of compounds.  Example:
 ```{r lkdrp}
-drp = DRProfSet()
-drp
+drp = try(DRProfSet())
+if (!inherits(drp, "try-error"))
+ drp
 ```
+This may fail if pharmacdb.pmgenomics.ca is down.
 
 The `plot` method reveals a basic motivation for `DRTraceSet`.
 ```{r lkpl090, fig.height=2.5}
@@ -77,7 +79,8 @@ plot(iric)
 
 The plot method for DRProfSet has a complementary purpose.
 ```{r lklll,fig.height=3.5}
-plot(drp)
+if (!inherits(drp, "try-error"))
+  plot(drp)
 ```
 
 ## Interrogating PharmacoDb
@@ -268,10 +271,13 @@ CCLE for MCF-7:
 library(rjson)
 library(httr)
 xx = GET("https://pharmacodb.pmgenomics.ca/api/v1/intersections/2/895/1?indent=true")
-ans = fromJSON(readBin(xx$content, what="character"))
-doses1 = sapply(ans[[1]]$dose_responses, function(x) x[[1]])
-resp1 =  sapply(ans[[1]]$dose_responses, function(x) x[[2]])
+if (as.numeric(xx$status_code) == 200) {
+ ans = fromJSON(readBin(xx$content, what="character"))
+ doses1 = sapply(ans[[1]]$dose_responses, function(x) x[[1]])
+ resp1 =  sapply(ans[[1]]$dose_responses, function(x) x[[2]])
+ }
 ```
+This code only runs if pharmacodb.pmgenomics.ca is responsive.
 
 The `compoundsByCell` function employs this pattern to establish
 lists of experiments per cell type.
@@ -283,5 +289,8 @@ to compute this figure):
 
 ```{r lkbar, fig=TRUE}
 library(ggplot2)
-plot(DRTraceSet(dataset="CCLE"))
+drt = try(DRTraceSet(dataset="CCLE"))
+if (!inherits(drt, "try-error")) plot(drt)
 ```
+This code only runs if pharmacodb.pmgenomics.ca is responsive.
+
